@@ -1,3 +1,14 @@
+target/
+/.mvn/
+mvnw*
+
+### IntelliJ IDEA ###
+.idea
+.jpb
+*.iws
+*.iml
+*.ipr
+
 # Compiled class file
 *.class
 
