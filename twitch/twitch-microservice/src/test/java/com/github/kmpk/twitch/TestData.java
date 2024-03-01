@@ -7,7 +7,7 @@ import com.github.kmpk.twitch.to.TwitchUserTo;
 import java.time.Instant;
 
 public class TestData {
-    public static final TwitchLiveStreamTo NEW_STREAM_TO = new TwitchLiveStreamTo("newId", "newLogin", "newUser", "newId", "newGame", Instant.now(), "newTitle", "url");
+    public static final TwitchLiveStreamTo NEW_STREAM_TO = new TwitchLiveStreamTo("existedId", "existedLogin", "existedName", "existedId", "existedName", Instant.now(), "newTitle", "newUrl");
 
     public static final TwitchUserTo EXISTED_USER_TO = new TwitchUserTo("existedId", "existedLogin", "existedName", "existedAvatarUrl");
     public static final TwitchUserTo EXISTED_OLD_USER_TO = new TwitchUserTo("existedOldId", "existedOldLogin", "existedOldName", "existedOldAvatarUrl");
