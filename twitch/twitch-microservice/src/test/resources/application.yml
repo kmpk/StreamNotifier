@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: validate
+    properties.hibernate:
+      default_schema: twitch
+  datasource:
+    url: jdbc:tc:postgresql:15.5:///integration-tests-db
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    out-of-order: false
+    schemas: twitch
+    ignore-migration-patterns:
+    clean-disabled: false
+
+logging:
+  level:
+    root: INFO
