@@ -2,6 +2,10 @@ notifier:
   twitch:
     id:
     secret:
+  amqp:
+    exchange: twitch.exchange
+    games-queue: twitch.games.queue
+    users-queue: twitch.users.queue
 spring:
   jpa:
     hibernate.ddl-auto: validate
@@ -18,6 +22,10 @@ spring:
     out-of-order: false
     schemas: twitch
     ignore-migration-patterns:
+  rabbitmq:
+    host: rabbitmq
+    password: rmpassword
+    username: rmuser
 
 logging:
   level:

@@ -9,10 +9,12 @@ import org.springframework.validation.annotation.Validated;
 @Getter
 @Setter
 @Validated
-@ConfigurationProperties(prefix = "notifier.twitch", ignoreUnknownFields = false)
-public class TwitchProperties {
+@ConfigurationProperties(prefix = "notifier.amqp", ignoreUnknownFields = false)
+public class AmqpProperties {
     @NotEmpty
-    private String id;
+    private String usersQueue;
     @NotEmpty
-    private String secret;
+    private String gamesQueue;
+    @NotEmpty
+    private String exchange;
 }
