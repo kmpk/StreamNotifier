@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TwitchGamesAmqpRpcClient implements TwitchGamesResource {
     private final AmqpProperties properties;
 
-    private final RabbitTemplate rabbitTemplate; //TODO: timeout
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public Optional<TwitchGameTo> findById(String id) {
@@ -35,16 +35,11 @@ public class TwitchGamesAmqpRpcClient implements TwitchGamesResource {
     }
 
     private Optional<TwitchGameTo> requestSingle(GamesRequestMessage message) {
-        try {
-            GamesResponseMessage response = rabbitTemplate.convertSendAndReceiveAsType(properties.getExchange(),
-                    properties.getGamesQueue(), message, ParameterizedTypeReference.forType(GamesResponseMessage.class));
-            if (response != null && !response.games().isEmpty()) {
-                return Optional.of(response.games().getFirst());
-            }
-        } catch (AmqpException e) {
-            log.error("", e);
+        List<TwitchGameTo> response = request(message);
+        if (response.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return Optional.of(response.getFirst());
     }
 
     @Override
@@ -63,7 +58,10 @@ public class TwitchGamesAmqpRpcClient implements TwitchGamesResource {
         try {
             GamesResponseMessage response = rabbitTemplate.convertSendAndReceiveAsType(properties.getExchange(),
                     properties.getGamesQueue(), message, ParameterizedTypeReference.forType(GamesResponseMessage.class));
-            if (response != null && !response.games().isEmpty()) {
+            if (response == null) {
+                throw new AmqpException("No response for games request");
+            }
+            if (!response.games().isEmpty()) {
                 return response.games();
             }
         } catch (AmqpException e) {

@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TwitchUsersAmqpRpcClient implements TwitchUsersResource {
     private final AmqpProperties properties;
 
-    private final RabbitTemplate rabbitTemplate; //TODO: timeout
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public Optional<TwitchUserTo> findById(String id) {
@@ -35,16 +35,11 @@ public class TwitchUsersAmqpRpcClient implements TwitchUsersResource {
     }
 
     private Optional<TwitchUserTo> requestSingle(UsersRequestMessage message) {
-        try {
-            UsersResponseMessage response = rabbitTemplate.convertSendAndReceiveAsType(properties.getExchange(),
-                    properties.getGamesQueue(), message, ParameterizedTypeReference.forType(UsersResponseMessage.class));
-            if (response != null && !response.users().isEmpty()) {
-                return Optional.of(response.users().getFirst());
-            }
-        } catch (AmqpException e) {
-            log.error("", e);
+        List<TwitchUserTo> response = request(message);
+        if (response.isEmpty()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return Optional.of(response.getFirst());
     }
 
     @Override
@@ -63,7 +58,10 @@ public class TwitchUsersAmqpRpcClient implements TwitchUsersResource {
         try {
             UsersResponseMessage response = rabbitTemplate.convertSendAndReceiveAsType(properties.getExchange(),
                     properties.getGamesQueue(), message, ParameterizedTypeReference.forType(UsersResponseMessage.class));
-            if (response != null && !response.users().isEmpty()) {
+            if (response == null) {
+                throw new AmqpException("No response for users request");
+            }
+            if (!response.users().isEmpty()) {
                 return response.users();
             }
         } catch (AmqpException e) {
