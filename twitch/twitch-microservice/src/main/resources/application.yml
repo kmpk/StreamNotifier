@@ -1,0 +1,32 @@
+notifier:
+  twitch:
+    id:
+    secret:
+  amqp:
+    exchange: twitch.exchange
+    games-queue: twitch.games.queue
+    users-queue: twitch.users.queue
+spring:
+  jpa:
+    hibernate.ddl-auto: validate
+    properties.hibernate:
+      default_schema: twitch
+  datasource:
+    url: jdbc:postgresql://localhost:5432/twitch?ApplicationName=twitch
+    username: twitchUser
+    password: twitchPassword
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    out-of-order: false
+    schemas: twitch
+    ignore-migration-patterns:
+  rabbitmq:
+    host: rabbitmq
+    password: rmpassword
+    username: rmuser
+
+logging:
+  level:
+    root: INFO
